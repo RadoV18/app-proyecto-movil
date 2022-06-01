@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_sound/flutter_sound.dart';
+import 'dart:io';
+import 'dart:async';
 
 import 'modelos.dart';
 
@@ -19,7 +22,7 @@ class _HomeState extends State<Home> {
       home: Scaffold(
         appBar: AppBar(
             centerTitle: true,
-            title: Text('Incio'),
+            title: Text('Inicio'),
             backgroundColor: Color(0xff32746D),
         ),
         body: Center (
@@ -39,7 +42,7 @@ class _HomeState extends State<Home> {
                     onPressed: () {
                       Navigator.pushNamed(context, '/app');
                     },
-                    child: const Text('Login'),
+                    child: const Text('Incio de Sesión'),
                   ),
                 ),
 
