@@ -59,12 +59,14 @@ class _AppState extends State<App> {
 
      */
   }
-  /*
 
-  Future<String> stopRecording() async {
+  Future<String?> stopRecording() async {
     _recordingSession.closeAudioSession();
     return await _recordingSession.stopRecorder();
   }
+  /*
+
+
 
    */
   /*
@@ -117,12 +119,13 @@ class _AppState extends State<App> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(Icons.stop),
+            label: 'Stop',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.mic),
             label: 'Grabar',
+
           ),
         ],
         currentIndex: _selectedIndex,
@@ -136,6 +139,12 @@ class _AppState extends State<App> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if(_selectedIndex == 1){
+        startRecording();
+      } else if(_selectedIndex == 0){
+        stopRecording();
+      }
+      print(_selectedIndex);
     });
   }
 
