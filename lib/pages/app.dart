@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path/path.dart' as path;
@@ -24,7 +26,9 @@ class _AppState extends State<App> {
   //final recordingPlayer = AssetsAudioPlayer();
 
   void initializer() async {
+
     pathToAudio = '/sdcard/Download/temp.wav';
+
     _recordingSession = FlutterSoundRecorder();
     await _recordingSession.openAudioSession(
         focus: AudioFocus.requestFocusAndStopOthers,
@@ -62,7 +66,15 @@ class _AppState extends State<App> {
 
   Future<String?> stopRecording() async {
     _recordingSession.closeAudioSession();
+    File file = File(pathToAudio);
+    List<int> fileBytes = await file.readAsBytes();
+    String base64String = base64Encode(fileBytes);
+    final fileString = '${pathToAudio};base64,$base64String';
+    print('Imprimiendo Base');
+    print(fileString);
+
     return await _recordingSession.stopRecorder();
+
   }
   /*
 
