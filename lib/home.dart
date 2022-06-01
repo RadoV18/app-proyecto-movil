@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
 
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/app');
+                      Navigator.pushNamed(context, '/login');
                     },
                     child: const Text('Incio de Sesión'),
                   ),
@@ -57,7 +57,7 @@ class _HomeState extends State<Home> {
 
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/app');
+                      Navigator.pushNamed(context, '/registro');
 
                     },
                     child: const Text('Registrarse'),

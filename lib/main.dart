@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_final/pages/app.dart';
+import 'package:proyecto_final/pages/login.dart';
+import 'package:proyecto_final/pages/register.dart';
 
 import 'home.dart';
 import 'modelos.dart';
@@ -22,17 +24,15 @@ class MyApp extends StatelessWidget {
           onGenerateRoute: (RouteSettings settings) {
             switch (settings.name){
               case '/':
-              //break;
                 return MaterialPageRoute(builder: (context) => Home());
               case '/app':
                 return MaterialPageRoute(builder: (context) => App());
-            // break;
-              case '/dos':
-              //return MaterialPageRoute(builder: (context) => Dos());
+              case '/registro':
+               return MaterialPageRoute(builder: (context) => Register());
 
             //break;
-              case '/tres':
-                //return MaterialPageRoute(builder: (context) => Tres());
+              case '/login':
+                return MaterialPageRoute(builder: (context) => Login());
 
             //break;
             }
