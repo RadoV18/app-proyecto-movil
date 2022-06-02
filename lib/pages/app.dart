@@ -143,7 +143,6 @@ class _AppState extends State<App> {
 
     );
 
-
   }
   Future toggleRecording() => Speech.toggleRecording(
     onResult: (text) => {setState(() => this.text = text)},
@@ -151,6 +150,7 @@ class _AppState extends State<App> {
     onListening: (isListening) {
       setState(() => this.isListening = isListening);
       /*
+      a
       if (!isListening) {
         Future.delayed(Duration(seconds: 1), () {
           Utils.scanText(text);

@@ -3,6 +3,7 @@ class Token{
   String tokenString = '';
   String username = '';
   String name = '';
+  String userId = '';
 
   factory Token() {
     return _token;
@@ -32,6 +33,14 @@ class Token{
 
   setName(String name) {
     this.name = name;
+  }
+
+  getUserId() {
+    return userId;
+  }
+
+  setUserId(String userId) {
+    this.userId = userId;
   }
 
   String getAuthHeaderString() {
