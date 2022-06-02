@@ -22,6 +22,9 @@ class _AppState extends State<App> {
   String statusText = "";
   late String pathToAudio;
   bool isComplete = false;
+  int i = 0;
+  String aux = '';
+  late String recordFilePath;
 
   //final recordingPlayer = AssetsAudioPlayer();
 
@@ -41,14 +44,12 @@ class _AppState extends State<App> {
     if (hasPermission) {
       statusText = "Recording...";
       recordFilePath = await getFilePath();
+      aux = recordFilePath;
+/*
 
-      File file = File(recordFilePath);
-      List<int> fileBytes = await file.readAsBytes();
-      String base64String = base64Encode(utf8.encode(fileBytes.toString()));
-      final fileString = '${recordFilePath};base64,$base64String';
-      print('Imprimiendo Base');
-      print(fileString);
 
+
+ */
       isComplete = false;
       RecordMp3.instance.start(recordFilePath, (type) {
         statusText = "Record error--->$type";
@@ -64,6 +65,14 @@ class _AppState extends State<App> {
 
   Future<String?> stopRecording() async {
     bool s = RecordMp3.instance.stop();
+
+    File file = File(aux);
+    List<int> fileBytes = await file.readAsBytes();
+    String base64String = base64Encode(utf8.encode(fileBytes.toString()));
+    final fileString = '${aux};base64,$base64String';
+    print('Imprimiendo Base');
+    print(fileString);
+
     if (s) {
       statusText = "Record complete";
       isComplete = true;
@@ -148,23 +157,16 @@ class _AppState extends State<App> {
     );
   }
 
-  late String recordFilePath;
 
-  int i = 0;
+
   Future<String> getFilePath() async {
     Directory storageDirectory = await getApplicationDocumentsDirectory();
     String sdPath = "/sdcard/Download";
-    print('Viendo path');
-    print(sdPath);
     var d = Directory(sdPath);
     if (!d.existsSync()) {
       d.createSync(recursive: true);
     }
-
-    /*
-
-
-     */
+    print('Path');
     return sdPath + "/test_${i++}.mp3";
   }
 
