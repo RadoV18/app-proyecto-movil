@@ -1,23 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.proyecto_final">
-<<<<<<< HEAD
-=======
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- Optional, you'll have to check this permission by yourself. -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
->>>>>>> a7111e9a39940506ceafa9a60301dcddf08ae80d
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
-<<<<<<< HEAD
-    <application android:requestLegacyExternalStorage="true"></application>
-=======
     <uses-permission android:name="android.permission.INTERNET" />
->>>>>>> a7111e9a39940506ceafa9a60301dcddf08ae80d
-
+    <application android:requestLegacyExternalStorage="true"></application>
     <application
         android:label="proyecto_final"
         android:name="${applicationName}"
