@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_sound/flutter_sound.dart';
 import 'dart:io';
 import 'dart:async';
 

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path/path.dart' as path;
 import 'package:record_mp3/record_mp3.dart';
 import 'package:path_provider/path_provider.dart';
@@ -23,31 +22,10 @@ class _AppState extends State<App> {
   String statusText = "";
   late String pathToAudio;
   bool isComplete = false;
-  late FlutterSoundRecorder _recordingSession;
 
   //final recordingPlayer = AssetsAudioPlayer();
 
-  void initializer() async {
 
-    pathToAudio = '/sdcard/Download/temp.wav';
-
-    _recordingSession = FlutterSoundRecorder();
-    await _recordingSession.openAudioSession(
-        focus: AudioFocus.requestFocusAndStopOthers,
-        category: SessionCategory.playAndRecord,
-        mode: SessionMode.modeDefault,
-        device: AudioDevice.speaker
-    );
-    await _recordingSession.setSubscriptionDuration(Duration(milliseconds: 10));
-    await Permission.microphone.request();
-    await Permission.storage.request();
-    await Permission.manageExternalStorage.request();
-  }
-
-  void initState() {
-    super.initState();
-    initializer();
-  }
   Future<bool> checkPermission() async {
     if (!await Permission.microphone.isGranted) {
       PermissionStatus status = await Permission.microphone.request();
