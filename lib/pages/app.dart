@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path/path.dart' as path;
-//import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:record_mp3/record_mp3.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'dart:io';
 import 'dart:async';
-
-import 'package:permission_handler/permission_handler.dart';
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -20,8 +20,9 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   int _selectedIndex = 0;
   int _tap = 1;
-  String _timerText = '';
+  String statusText = "";
   late String pathToAudio;
+  bool isComplete = false;
   late FlutterSoundRecorder _recordingSession;
 
   //final recordingPlayer = AssetsAudioPlayer();
@@ -47,36 +48,51 @@ class _AppState extends State<App> {
     super.initState();
     initializer();
   }
+  Future<bool> checkPermission() async {
+    if (!await Permission.microphone.isGranted) {
+      PermissionStatus status = await Permission.microphone.request();
+      if (status != PermissionStatus.granted) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   Future<void> startRecording() async {
+    bool hasPermission = await checkPermission();
+    if (hasPermission) {
+      statusText = "Recording...";
+      recordFilePath = await getFilePath();
 
-    Directory directory = Directory(path.dirname(pathToAudio));
-    if (!directory.existsSync()) {
-      directory.createSync();
+      File file = File(recordFilePath);
+      List<int> fileBytes = await file.readAsBytes();
+      String base64String = base64Encode(utf8.encode(fileBytes.toString()));
+      final fileString = '${recordFilePath};base64,$base64String';
+      print('Imprimiendo Base');
+      print(fileString);
+
+      isComplete = false;
+      RecordMp3.instance.start(recordFilePath, (type) {
+        statusText = "Record error--->$type";
+        setState(() {});
+      });
+    } else {
+      statusText = "No microphone permission";
     }
-    _recordingSession.openAudioSession();
-    await _recordingSession.startRecorder(
-      toFile: pathToAudio,
-      codec: Codec.pcm16WAV,
-    );
+    setState(() {
 
-    /*
-
-     */
+    });
   }
 
   Future<String?> stopRecording() async {
-    _recordingSession.closeAudioSession();
-    File file = File(pathToAudio);
-    List<int> fileBytes = await file.readAsBytes();
-    String base64String = base64Encode(fileBytes);
-    final fileString = '${pathToAudio};base64,$base64String';
-    print('Imprimiendo Base');
-    print(fileString);
-
-    return await _recordingSession.stopRecorder();
-
+    bool s = RecordMp3.instance.stop();
+    if (s) {
+      statusText = "Record complete";
+      isComplete = true;
+      setState(() {});
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     bool _playAudio = false;
@@ -90,7 +106,7 @@ class _AppState extends State<App> {
           child: Column(
             children: [
               Text(
-                _timerText,
+                'Teto',
                 style: TextStyle(fontSize: 70, color: Colors.red),
               ),
             ],
@@ -154,16 +170,24 @@ class _AppState extends State<App> {
     );
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      if(_selectedIndex == 1){
-        startRecording();
-      } else if(_selectedIndex == 0){
-        stopRecording();
-      }
-      print(_selectedIndex);
-    });
+  late String recordFilePath;
+
+  int i = 0;
+  Future<String> getFilePath() async {
+    Directory storageDirectory = await getApplicationDocumentsDirectory();
+    String sdPath = "/sdcard/Download";
+    print('Viendo path');
+    print(sdPath);
+    var d = Directory(sdPath);
+    if (!d.existsSync()) {
+      d.createSync(recursive: true);
+    }
+
+    /*
+
+
+     */
+    return sdPath + "/test_${i++}.mp3";
   }
 
 }
