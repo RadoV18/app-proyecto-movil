@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:path/path.dart' as path;
-import 'package:record_mp3/record_mp3.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:uuid/uuid.dart';
 
 import 'dart:io';
 import 'dart:async';
@@ -19,10 +19,50 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+
+
   int _selectedIndex = 0;
   int _tap = 1;
   String text = 'Texto inicial';
   bool isListening = false;
+
+  List<types.Message> _messages = [];
+  final _user = const types.User(id: '06c33e8b-e835-4736-80f4-63f44b66666c');
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMessages();
+  }
+
+
+  void _addMessage(types.Message message) {
+    setState(() {
+      _messages.insert(0, message);
+    });
+  }
+
+  void _handleSendPressed(types.PartialText message) {
+    final textMessage = types.TextMessage(
+      author: _user,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+      id: const Uuid().v4(),
+      text: message.text,
+    );
+
+    _addMessage(textMessage);
+  }
+
+  void _loadMessages() async {
+    final response = await rootBundle.loadString('assets/messages.json');
+    final messages = (jsonDecode(response) as List)
+        .map((e) => types.Message.fromJson(e as Map<String, dynamic>))
+        .toList();
+
+    setState(() {
+      _messages = messages;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,6 +71,12 @@ class _AppState extends State<App> {
         title: Text('Aplicación'),
         backgroundColor: Color(0xff32746D),
       ),
+      body: Chat(
+        messages: _messages,
+        onSendPressed: _handleSendPressed,
+        user: _user,
+      ),
+      /*
       body: Center(
           child: Column(
             children: [
@@ -41,14 +87,21 @@ class _AppState extends State<App> {
             ],
           )
       ),
+
+       */
       bottomNavigationBar: BottomAppBar(
         color: Color(0xff32746D),
         child: Row(
-
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: toggleRecording,
+
+              onPressed: ()=>{
+                toggleRecording(),
+                print("JAKAA"),
+                print(this.text)
+
+              },
                   /*
 
                   (){
