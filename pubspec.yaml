@@ -33,6 +33,7 @@ dependencies:
     version: ^6.0.2
   assets_audio_player: ^3.0.4+3
   record_mp3: ^3.0.0
+  speech_to_text: ^5.5.0
   intl: ^0.17.0
 
 
