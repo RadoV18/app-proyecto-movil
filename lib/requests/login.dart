@@ -1,9 +1,10 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../singletons/token.dart';
+import '../ip.dart';
 
 Future<bool> login(username, password) async {
-  final response = await http.post(Uri.parse("http://192.168.0.121:3001/api/auth"),
+  final response = await http.post(Uri.parse("http://${getIp()}:3001/api/auth"),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },

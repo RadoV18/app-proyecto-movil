@@ -1,11 +1,12 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../singletons/token.dart';
+import '../../ip.dart';
 
 Future<String> saveNote(String text) async {
   Token t1 = Token();
   final response = await http.post(
-      Uri.parse("http://192.168.0.121:3001/api/notes/new/${t1.getUserId()}"),
+      Uri.parse("http://${getIp()}:3001/api/notes/new/${t1.getUserId()}"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },
@@ -23,7 +24,7 @@ Future<String> saveNote(String text) async {
 Future<List<String>> getAllNotes() async {
   Token t1 = Token();
   final response = await http.get(
-    Uri.parse("http://192.168.0.121:3001/api/notes/user/${t1.getUserId()}")
+    Uri.parse("http://${getIp()}:3001/api/notes/user/${t1.getUserId()}")
   );
   var data = json.decode(response.body);
   List<String> res = [];

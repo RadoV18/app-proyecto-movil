@@ -1,6 +1,7 @@
 import './weather/requests.dart';
 import './notes/requests.dart';
 import './jokes/requests.dart';
+import './news/requests.dart';
 
 Future<List<String>> assistantRequest(String text) async {
   List<String> response = [];
@@ -20,6 +21,10 @@ Future<List<String>> assistantRequest(String text) async {
   } else if(text.toLowerCase().compareTo("cuéntame un chiste") == 0 ||
       text.toLowerCase().compareTo("contar un chiste") == 0) {
     response.add(await getJoke());
+  } else if(text.toLowerCase().startsWith("noticias sobre")) {
+    String category = text.toLowerCase().replaceAll("noticias sobre ", "");
+    List<String> res = await getNews(category);
+    response = res;
   }
   return response;
 }
