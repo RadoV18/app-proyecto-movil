@@ -41,7 +41,7 @@ class _HomeState extends State<Home> {
                     onPressed: () {
                       Navigator.pushNamed(context, '/login');
                     },
-                    child: const Text('Incio de Sesión'),
+                    child: const Text('Inicio de Sesión'),
                   ),
                 ),
 
@@ -52,12 +52,9 @@ class _HomeState extends State<Home> {
                     style: ElevatedButton.styleFrom(
                       primary: Color(0xff32746D),
                       minimumSize: Size(150, 50),
-
-
                     ),
                     onPressed: () {
                       Navigator.pushNamed(context, '/registro');
-
                     },
                     child: const Text('Registrarse'),
                   ),
