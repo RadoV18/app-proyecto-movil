@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'dart:io';
-import 'dart:async';
 
 import 'modelos.dart';
 
@@ -63,37 +61,6 @@ class _HomeState extends State<Home> {
               ],
             )
         )
-
-        /*
-          appBar: AppBar(title: Text('Provider')) ,
-          body: Center(
-
-              child: Column (
-                children: [
-                  TextButton(
-                      onPressed: (){
-                        Navigator.pushNamed(context, '/uno');
-                      },
-                      child: Text('Pagina uno')
-                  ),
-                  TextButton(
-                      onPressed: (){
-                        Navigator.pushNamed(context, '/dos');
-
-                      },
-                      child: Text('Pagina dos')
-                  ),
-                  TextButton(
-                      onPressed: (){
-                        Navigator.pushNamed(context, '/tres');
-                      },
-                      child: Text('Pagina tres')
-                  ),
-                ],
-              )
-          )
-
-         */
       ),
     );
   }

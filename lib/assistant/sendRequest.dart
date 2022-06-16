@@ -1,7 +1,33 @@
+
+import 'package:dialog_flowtter/dialog_flowtter.dart';
+
 import './weather/requests.dart';
 import './notes/requests.dart';
 import './jokes/requests.dart';
 import './news/requests.dart';
+
+Future<String> chatbot(message) async {
+  DialogAuthCredentials credentials = await DialogAuthCredentials.fromFile("assets/credentials.json");
+  DialogFlowtter dialogflow = DialogFlowtter(
+    credentials: credentials,
+    sessionId: "s1"
+  );
+  QueryInput queryInput = QueryInput(
+    text: TextInput(
+      text: message,
+      languageCode: "es"
+    )
+  );
+  DetectIntentResponse response = await dialogflow.detectIntent(
+    queryInput: queryInput,
+  );
+  String? textResponse = response.text;
+  if(textResponse != null) {
+    return textResponse.toString();
+  } else {
+    return "";
+  }
+}
 
 Future<List<String>> assistantRequest(String text) async {
   List<String> response = [];
@@ -25,6 +51,9 @@ Future<List<String>> assistantRequest(String text) async {
     String category = text.toLowerCase().replaceAll("noticias sobre ", "");
     List<String> res = await getNews(category);
     response = res;
+  } else {
+    String chatbotResponse = await chatbot(text);
+    response.add(chatbotResponse);
   }
   return response;
 }

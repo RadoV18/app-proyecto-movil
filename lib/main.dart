@@ -7,15 +7,12 @@ import 'package:proyecto_final/pages/register.dart';
 import 'home.dart';
 import 'modelos.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -29,14 +26,9 @@ class MyApp extends StatelessWidget {
                 return MaterialPageRoute(builder: (context) => App());
               case '/registro':
                return MaterialPageRoute(builder: (context) => Register());
-
-            //break;
               case '/login':
                 return MaterialPageRoute(builder: (context) => Login());
-
-            //break;
             }
-
           }
       ),
     );

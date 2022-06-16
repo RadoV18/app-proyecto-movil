@@ -7,6 +7,7 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:async';
 
+import '../TextToSpeech.dart';
 import '../Speech.dart';
 
 class App extends StatefulWidget {
@@ -96,6 +97,7 @@ class _AppState extends State<App> {
           List<String> response = await assistantRequest(text);
           for(int i = 0; i < response.length; i++) {
             _handleSendPressed(types.PartialText(text:response[i]), 'server');
+            await speak(response[i]);
           }
           print(response);
         }
@@ -106,5 +108,4 @@ class _AppState extends State<App> {
       setState(() => this.isListening = isListening);
     },
   );
-
 }
