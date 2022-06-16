@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:proyecto_final/pages/app.dart';
 import 'package:proyecto_final/pages/login.dart';
 import 'package:proyecto_final/pages/register.dart';
+import 'package:proyecto_final/pages/table.dart';
 
 import 'home.dart';
 import 'modelos.dart';
@@ -33,6 +34,9 @@ class MyApp extends StatelessWidget {
             //break;
               case '/login':
                 return MaterialPageRoute(builder: (context) => Login());
+
+              case '/table':
+                return MaterialPageRoute(builder: (context) => Tables());
 
             //break;
             }
