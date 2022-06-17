@@ -1,21 +1,12 @@
-import 'dart:convert';
-import '../assistant/sendRequest.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../Speech.dart';
-import 'package:uuid/uuid.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import '../singletons/TableModel.dart';
 
 
 class Tables extends StatefulWidget {
   const Tables({Key? key}) : super(key: key);
-
-
   @override
   State<Tables> createState() => _TableState();
-
-
-
 }
 
 class _TableState extends State<Tables>{
@@ -23,32 +14,45 @@ class _TableState extends State<Tables>{
   bool isListening = false;
   bool sendRequest = false;
   bool flag = false;
-  List<types.Message> _messages = [];
+
+  double cellWidth = 100.0;
+  double cellHeight = 40.0;
+  double margin = 0.5;
+
+  int counter = 1;
+
+  late TableModel tModel;
+  List<List<String>> table = [];
 
   @override
   Widget build(BuildContext context) {
-    throw Scaffold(
+    tModel = TableModel();
+    table = tModel.getTable(); // init if empty
+    return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text('Tabla'),
         backgroundColor: Color(0xff32746D),
       ),
-      body: SingleChildScrollView(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Flexible(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  //Numero de filas
-                  children: _buildRows(15),
+      body: Container(
+        color: Colors.black,
+        child: SingleChildScrollView(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Flexible(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    //Numero de filas
+                    children: _buildTable(tModel.getRowCount(), tModel.getColumnCount()),
+                  ),
                 ),
-              ),
-            )
-          ],
-        ),
+              )
+            ],
+          ),
+        )
       ),
       bottomNavigationBar: BottomAppBar(
           color: Color(0xff32746D),
@@ -71,100 +75,67 @@ class _TableState extends State<Tables>{
     );
   }
 
-  Future toggleRecording() => Speech.toggleRecording(
-    onResult: (text) {
-      setState(() async {
-        if(!isListening && sendRequest) {
-          _handleSendPressed(types.PartialText(text:text), '06c33e8b-e835-4736-80f4-63f44b66666c');
-          List<String> response = await assistantRequest(text);
-          for(int i = 0; i < response.length; i++) {
-            _handleSendPressed(types.PartialText(text:response[i]), 'server');
-          }
-          print(response);
-        }
-      }
-      );
-    },
-    onListening: (isListening) {
-      setState(() => this.isListening = isListening);
-    },
-  );
-
-  List<Widget> _buildCells(int count) {
-    return List.generate(
-      count,
-          (index) => Container(
-        alignment: Alignment.center,
-        width: 120.0,
-        height: 60.0,
-        color: Colors.grey,
-        margin: EdgeInsets.all(4.0),
-        //Texto de celdas
-        child: Text("${index + 1}"),
-      ),
-
-    );
-  }
-
-  List <Widget> _buildHeaders(int count){
-    flag = true;
-    return List.generate(
-      count,
-          (index) => Container(
-        alignment: Alignment.center,
-        width: 120.0,
-        height: 60.0,
-        color: Colors.amber,
-        margin: EdgeInsets.all(4.0),
-        //Texto de celdas
-        child: Text("${index + 1}"),
-      ),
-
-    );
-  }
-
-  List<Widget> _buildRows(int count) {
-    return List.generate(
-      count,
-          (index) => Row(
-        //Numero de columnas
-        children: flag ? _buildCells(5) : _buildHeaders(5),
-      ),
-    );
-  }
-
   @override
   void initState() {
     super.initState();
-    _loadMessages();
   }
 
-  void _addMessage(types.Message message) {
-    setState(() {
-      _messages.insert(0, message);
-    });
+  // Table
+  List<Widget> _buildTable(int rows, int columns) {
+    List<Widget> result = [];
+    for(int i = 0; i < rows; i++) {
+      List<Widget> cells = [];
+      for(int j = 0; j < columns; j++) {
+        if(i == 0) {
+          // header row
+          if(j == 0) {
+            // top left corner
+            cells.add(cell("-", true));
+          } else {
+            cells.add(cell(j.toString(), true));
+          }
+        } else if (j == 0) {
+          // first column
+          cells.add(cell(i.toString(), true));
+        } else {
+          // cell
+          cells.add(cell(table[i][j], false));
+        }
+      }
+      result.add(
+        Row( children: cells )
+      );
+    }
+    return result;
   }
 
-  void _handleSendPressed(types.PartialText message, String userId) {
-    final textMessage = types.TextMessage(
-      author: types.User(id: userId),
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-      id: const Uuid().v4(),
-      text: message.text,
+  Container cell(String value, bool isHeader) {
+    return Container(
+      alignment: Alignment.center,
+      width: cellWidth,
+      height: cellHeight,
+      color: isHeader ? Colors.amber : Colors.white,
+      margin: EdgeInsets.all(margin),
+      //Texto de celdas
+      child: Text(value),
     );
-    _addMessage(textMessage);
   }
 
-  void _loadMessages() async {
-    final response = await rootBundle.loadString('assets/messages.json');
-    final messages = (jsonDecode(response) as List)
-        .map((e) => types.Message.fromJson(e as Map<String, dynamic>))
-        .toList();
+  // Recording
+  Future toggleRecording() => Speech.toggleRecording(
+    onResult: (text) {
+        setState(() async {
+          print(isListening);
+          if(!isListening && sendRequest) {
+            print(text);
+          }
+        }
+      );
+    },
+    onListening: (listen) {
 
-    setState(() {
-      _messages = messages;
-    });
-  }
-
+      setState(() => isListening = listen);
+    },
+  );
 }
 

@@ -51,6 +51,8 @@ Future<List<String>> assistantRequest(String text) async {
     String category = text.toLowerCase().replaceAll("noticias sobre ", "");
     List<String> res = await getNews(category);
     response = res;
+  } else if(text.toLowerCase().startsWith("abrir tabla")) {
+    response.add("Abriendo tabla...");
   } else {
     String chatbotResponse = await chatbot(text);
     response.add(chatbotResponse);

@@ -58,6 +58,7 @@ class _AppState extends State<App> {
   }
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -99,7 +100,11 @@ class _AppState extends State<App> {
             _handleSendPressed(types.PartialText(text:response[i]), 'server');
             await speak(response[i]);
           }
+          Speech.stop();
           print(response);
+          if(response[0] == "Abriendo tabla...") {
+            Navigator.pushNamed(context, '/table');
+          }
         }
       }
       );
