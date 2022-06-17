@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:proyecto_final/assistant/tableRequest.dart';
+
 import '../assistant/sendRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,6 +30,11 @@ class _AppState extends State<App> {
 
   bool tableFlag = false;
 
+  List<String> colores = ['Amarillo', 'Azul', 'Rojo', 'Rosa', 'Morado', 'Verde',
+    'Negro', 'Gris', 'Blanco', 'Lima', 'Violeta', 'Magenta', 'Fucsia', 'Menta',
+    'Lavanda', 'Rosado', 'Cobre', 'Canela', 'Dorado', 'Turquesa', 'Amatista',
+    'Purpura', 'Vino'];
+
   // Table
   double cellWidth = 100.0;
   double cellHeight = 40.0;
@@ -35,7 +42,7 @@ class _AppState extends State<App> {
 
   int counter = 1;
 
-  late TableModel tModel;
+  TableModel tModel = TableModel();
   List<List<String>> table = [];
 
   @override
@@ -80,12 +87,27 @@ class _AppState extends State<App> {
     }
     return getChat();
   }
+
   Future toggleRecording() => Speech.toggleRecording(
     onResult: (text) {
         setState(() async {
           if(!isListening && sendRequest) {
             if(tableFlag) {
-              print(text);
+              if(text.toLowerCase().startsWith("cerrar tabla")) {
+                await speak("cerrando tabla");
+                setState(() {
+                  tableFlag = false;
+                });
+              } else {
+                List<String> response = tableRequest(text);
+                for(int i = 0; i < response.length; i++) {
+                  await speak(response[i]);
+                }
+                setState(() {
+                  tModel = TableModel();
+                  table = tModel.getTable();
+                });
+              }
             } else {
               _handleSendPressed(types.PartialText(text:text), '06c33e8b-e835-4736-80f4-63f44b66666c');
               List<String> response = await assistantRequest(text);
@@ -199,11 +221,11 @@ class _AppState extends State<App> {
             // top left corner
             cells.add(cell("-", true));
           } else {
-            cells.add(cell(j.toString(), true));
+            cells.add(cell(colores[j], true));
           }
         } else if (j == 0) {
           // first column
-          cells.add(cell(i.toString(), true));
+          cells.add(cell(colores[i], true));
         } else {
           // cell
           cells.add(cell(table[i][j], false));

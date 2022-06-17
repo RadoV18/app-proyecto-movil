@@ -86,6 +86,14 @@ class TableModel {
       print(table[i]);
     }
   }
+
+  void clear() {
+    for(int i = 0; i < rowCount; i++) {
+      for(int j = 0; j < columnCount; j++) {
+        table[i][j] = "";
+      }
+    }
+  }
 }
 
 main() {
